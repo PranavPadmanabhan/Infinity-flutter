@@ -5,14 +5,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:infinity/components/ProfileSetup.dart';
 import 'package:infinity/screens/HomeScreen.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 
 void main()async { 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  
   runApp(MaterialApp(
-      home: MyApp(),
+      home: ProfileSetup(),
       debugShowCheckedModeBanner: false,
     ));
 }
