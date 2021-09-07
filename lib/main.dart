@@ -14,7 +14,7 @@ void main()async {
   await Firebase.initializeApp();
   
   runApp(MaterialApp(
-      home: ProfileSetup(),
+      home: MyApp(),
       debugShowCheckedModeBanner: false,
     ));
 }
@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
   Future<void>signIn( smsCode)async{
      AuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
     await firebaseAuth.signInWithCredential(credential);
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileSetup()));
   }
 
   

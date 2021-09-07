@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -23,28 +24,53 @@ class _ProfileSetupState extends State<ProfileSetup> {
 late File _image;
    File img = File("assets/images/default.png");
     var def = "https://www.computerhope.com/jargon/g/guest-user.jpg";
+    final _scaffoldKey = GlobalKey<ScaffoldState>();
 
 
  _imgFromCamera() async {
-  var image = await imagePicker.pickImage(
+  var image = await imagePicker.getImage(
     source: ImageSource.camera, imageQuality: 50
-  );
+  )as File;
 
   setState(() {
-    _image = (image==null?img:image) as File;
+    _image = (image==null?img:image) ;
   });
 }
 
 _imgFromGallery() async {
-  var image = await  imagePicker.pickImage(
+  var image = await  imagePicker.getImage(
       source: ImageSource.gallery, imageQuality: 50
-  );
+  ) as File;
 
   setState(() {
-    _image = (image==null?img:image)  as File;
+    _image = (image==null?img:image)  ;
   });
 }
 
+  void uploadImage()async{
+     firebase_storage.FirebaseStorage storage =
+      firebase_storage.FirebaseStorage.instance;
+     try {
+       firebase_storage.UploadTask task = firebase_storage.FirebaseStorage.instance
+      .ref('ProfilePics/${firebaseauth.currentUser!.uid}/')
+      .putFile(_image);
+       
+        firebase_storage.TaskSnapshot snapshot = await task;
+    print('Uploaded ${snapshot.bytesTransferred} bytes.');
+
+    var url;
+    task.whenComplete(() => {
+      url = task.snapshot.ref.getDownloadURL(),
+      print(url)
+    });
+
+    firebaseauth.currentUser!.updatePhotoURL(url);
+        
+     } catch (e) {
+       _scaffoldKey.currentState!.showSnackBar(SnackBar(content: Text(e.toString())));
+
+     }
+   }
 
   void _showPicker(context) {
   showModalBottomSheet( 
@@ -84,6 +110,7 @@ _imgFromGallery() async {
     var width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      key: _scaffoldKey,
       body: Container(
         height: height,
         width: width,
@@ -113,6 +140,9 @@ _imgFromGallery() async {
               ),
             ),
             GestureDetector(
+              onTap: (){
+                uploadImage();
+              },
               child: Container(
                 margin: EdgeInsets.only(top: 50),
                 width: width * 0.4,

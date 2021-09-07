@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
       body: Container(
         height: height,
         width: width,
-        child: Center(child: Text("Home"),),
+        child: Center(child: Image(image: NetworkImage(firebaseauth.currentUser!.photoURL.toString()))),
       ),
     );
   }
