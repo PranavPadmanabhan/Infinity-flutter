@@ -41,6 +41,8 @@ class _MyAppState extends State<MyApp> {
   AuthState currentState = AuthState.MOBILE_NUMBER_ENTRY;
   final  firebaseAuth = FirebaseAuth.instance;
 
+
+
  verifyPhonenumber(phonenumber) async {
    await firebaseAuth.verifyPhoneNumber(
      // ignore: unnecessary_brace_in_string_interps
@@ -70,7 +72,16 @@ class _MyAppState extends State<MyApp> {
     Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileSetup()));
   }
 
-  
+  @override
+  void initState() async{
+    // TODO: implement initState
+    super.initState();
+     firebaseAuth.authStateChanges().listen((user) {
+       if(user != null){
+         Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileSetup()));
+       }
+      });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +100,7 @@ class _MyAppState extends State<MyApp> {
                 fit: BoxFit.fitHeight)),
         child: Center(
             child: Stack(
+              overflow: Overflow.visible,
           children: [
             Positioned(
               top: 0,
@@ -142,7 +154,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                     margin: EdgeInsets.only(bottom: height * 0.2,left: height * 0.05,right: height * 0.05,top: 30 ),
                     child: Stack(
-                      overflow: Overflow.visible,
+                      
                       children: [
                         Positioned(
                           top: -40,

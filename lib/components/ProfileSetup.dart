@@ -33,13 +33,14 @@ late File _image;
   )as File;
 
   setState(() {
+    // ignore: unnecessary_null_comparison
     _image = (image==null?img:image) ;
   });
 }
 
 _imgFromGallery() async {
   var image = await  imagePicker.getImage(
-      source: ImageSource.gallery, imageQuality: 50
+      source: ImageSource.gallery, imageQuality: 50,
   ) as File;
 
   setState(() {
